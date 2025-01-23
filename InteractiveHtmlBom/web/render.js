@@ -369,6 +369,75 @@ function drawEdgeCuts(canvas, scalefactor) {
   }
 }
 
+function updateColors()
+{
+  // Clear colors
+  for (var i = 0; i < pcbdata.footprints.length; i++)
+  {
+	pcbdata.footprints[i].color = -1;
+  }
+  // Set colors
+  var inc = 0;
+  for (var i = 0; i < bomtable.length; i++)
+  {
+    if(inc >= 10)
+      break;
+    var some_elem = bomtable[i][0][1]; // ID first elem
+    if(markedFootprints.has(some_elem))
+    {
+	  // this row marked, set new color for all elements
+	  for (var j = 0; j < bomtable[i].length; j++)
+	  {
+	    var id = bomtable[i][j][1];
+	    pcbdata.footprints[id].color = inc;
+	  }
+	  inc++;
+    }
+  }
+}
+
+function colorNum(color)
+{
+  switch(color)
+  {
+  case 0:
+    return "#FF0000";
+  case 1:
+    return "#00FF00";
+  case 2:
+    return "#0000FF";
+  case 3:
+    return "#FFFF00";
+  case 4:
+    return "#FF00FF";
+  case 5:
+    return "#00FFFF";
+  default:
+    return getComputedStyle(topmostdiv).getPropertyValue('--pad-color-highlight-marked');
+  }
+}
+
+function colorBothNum(color)
+{
+  switch(color)
+  {
+  case 0:
+    return "#880000";
+  case 1:
+    return "#008800";
+  case 2:
+    return "#000088";
+  case 3:
+    return "#888800";
+  case 4:
+    return "#880088";
+  case 5:
+    return "#008888";
+  default:
+    return getComputedStyle(topmostdiv).getPropertyValue('--pad-color-highlight-both');
+  }
+}
+
 function drawFootprints(canvas, layer, scalefactor, highlight) {
   var ctx = canvas.getContext("2d");
   ctx.lineWidth = 3 / scalefactor;
@@ -387,13 +456,15 @@ function drawFootprints(canvas, layer, scalefactor, highlight) {
     var d = markedFootprints.has(i);
     if (highlight) {
       if(h && d) {
-        colors.pad = style.getPropertyValue('--pad-color-highlight-both');
+        var color = pcbdata.footprints[i].color;
+        colors.pad = colorBothNum(color);
         colors.outline = style.getPropertyValue('--pin1-outline-color-highlight-both');
       } else if (h) {
         colors.pad = style.getPropertyValue('--pad-color-highlight');
         colors.outline = style.getPropertyValue('--pin1-outline-color-highlight');
       } else if (d) {
-        colors.pad = style.getPropertyValue('--pad-color-highlight-marked');
+        var color = pcbdata.footprints[i].color;
+        colors.pad = colorNum(color);
         colors.outline = style.getPropertyValue('--pin1-outline-color-highlight-marked');
       }
     }

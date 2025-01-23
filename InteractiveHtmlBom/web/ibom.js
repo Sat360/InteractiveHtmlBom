@@ -210,6 +210,7 @@ function createCheckboxHandlers(input, checkbox, references, row) {
         for (var ref of references) {
           markedFootprints.add(ref[1]);
         }
+        updateColors();
         drawHighlights();
       }
       eventArgs.state = 'checked';
@@ -223,6 +224,7 @@ function createCheckboxHandlers(input, checkbox, references, row) {
         for (var ref of references) {
           markedFootprints.delete(ref[1]);
         }
+        updateColors();
         drawHighlights();
       }
       eventArgs.state = 'unchecked';
@@ -1103,6 +1105,7 @@ function setMarkWhenChecked(value) {
     markedFootprints.add(ref);
   }
   populateBomTable();
+  updateColors();
   drawHighlights();
 }
 
